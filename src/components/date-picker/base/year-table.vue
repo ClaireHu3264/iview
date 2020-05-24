@@ -35,19 +35,23 @@
                 const cell_tmpl = {
                     text: '',
                     selected: false,
-                    disabled: false
+                    disabled: false,
+                    is_assist: false
                 };
 
                 const selectedDays = this.dates.filter(Boolean).map(date => clearHours(new Date(date.getFullYear(), 0, 1)));
                 const focusedDate = clearHours(new Date(this.focusedDate.getFullYear(), 0, 1));
 
-                for (let i = 0; i < 10; i++) {
+                for (let i = -1; i < 11; i++) {
                     const cell = deepCopy(cell_tmpl);
                     cell.date = new Date(this.startYear + i, 0, 1);
                     cell.disabled = typeof this.disabledDate === 'function' && this.disabledDate(cell.date) && this.selectionMode === 'year';
                     const day = clearHours(cell.date);
                     cell.selected = selectedDays.includes(day);
                     cell.focused = day === focusedDate;
+                    if(i === -1 || i === 10) {
+                        cell.is_assist = true;
+                    }
                     cells.push(cell);
                 }
 
@@ -62,7 +66,8 @@
                         [`${prefixCls}-cell-selected`]: cell.selected,
                         [`${prefixCls}-cell-disabled`]: cell.disabled,
                         [`${prefixCls}-cell-focused`]: cell.focused,
-                        [`${prefixCls}-cell-range`]: cell.range && !cell.start && !cell.end
+                        [`${prefixCls}-cell-range`]: cell.range && !cell.start && !cell.end,
+                        [`${prefixCls}-cell-assist`]: cell.is_assist
                     }
                 ];
             },
